@@ -7,7 +7,7 @@ from pyglet import image
 width, height= 640, 480
 window = Window(caption="Taiko 3 Chart Viewer", width=width,height=height)
 batch = pyglet.graphics.Batch()
-helpbatch = pyglet.graphics.Batch()
+batchtwo = pyglet.graphics.Batch()
 sprites = []
 
 temp1 = 0
@@ -95,48 +95,48 @@ def viewer(a, mn):
         4: 'TAB',
         5: 'TMB'
     }
-    
     for i in [mn]:
         for j in range(47, -1, -1):
             for k in range(6):
                 imgdefine = a[i].get(chartlookup[k])[j]
+                imt = image.ImageGrid(image.load('notes.png'), 4, 4)
                 match imgdefine:
-                    case (1 | 2 | 3): imgdefined = 'note01.png'
-                    case (5 | 6 | 7): imgdefined = 'note05.png'
-                    case (9 | 10 | 11): imgdefined = 'note09.png'
-                    case (13 | 14 | 15): imgdefined = 'note13.png'
-                    case (17 | 18 | 19): imgdefined = 'note17.png'
-                    case 21: imgdefined = 'note21.png'
+                    case (1 | 2 | 3): imgdefined = imt[0]
+                    case (5 | 6 | 7): imgdefined = imt[1]
+                    case (9 | 10 | 11): imgdefined = imt[2]
+                    case (13 | 14 | 15): imgdefined = imt[3]
+                    case (17 | 18 | 19): imgdefined = imt[4]
+                    case 21: imgdefined = imt[5]
                     case 22:
                         if j == 47:
-                            if (i < len(a)-1 and a[i+1].get(chartlookup[k])[0]) == 22: imgdefined = 'note22b.png'
-                            else: imgdefined = 'note22c.png'
-                        elif(j != 47 and a[i].get(chartlookup[k])[j+1] != 22 and a[i].get(chartlookup[k])[j-1] == 22): imgdefined = 'note22c.png'
+                            if (i < len(a)-1 and a[i+1].get(chartlookup[k])[0]) == 22: imgdefined = imt[7]
+                            else: imgdefined = imt[8]
+                        elif(j != 47 and a[i].get(chartlookup[k])[j+1] != 22 and a[i].get(chartlookup[k])[j-1] == 22): imgdefined = imt[8]
                         elif j == 0:
-                            if (i > 0 and a[i-1].get(chartlookup[k])[47]) == 22: imgdefined = 'note22b.png'
-                            else: imgdefined = 'note22a.png'
-                        elif(j != 0 and a[i].get(chartlookup[k])[j-1] != 22 and a[i].get(chartlookup[k])[j+1] == 22): imgdefined = 'note22a.png'
-                        else: imgdefined = 'note22b.png'
+                            if (i > 0 and a[i-1].get(chartlookup[k])[47]) == 22: imgdefined = imt[7]
+                            else: imgdefined = imt[6]
+                        elif(j != 0 and a[i].get(chartlookup[k])[j-1] != 22 and a[i].get(chartlookup[k])[j+1] == 22): imgdefined = imt[6]
+                        else: imgdefined = imt[7]
                     case 23:
                         if j == 47:
-                            if (i < len(a)-1 and a[i+1].get(chartlookup[k])[0]) == 23: imgdefined = 'note23b.png'
-                            else: imgdefined = 'note23c.png'
-                        elif(j != 47 and a[i].get(chartlookup[k])[j+1] != 23 and a[i].get(chartlookup[k])[j-1] == 23): imgdefined = 'note23c.png'
+                            if (i < len(a)-1 and a[i+1].get(chartlookup[k])[0]) == 23: imgdefined = imt[10]
+                            else: imgdefined = imt[11]
+                        elif(j != 47 and a[i].get(chartlookup[k])[j+1] != 23 and a[i].get(chartlookup[k])[j-1] == 23): imgdefined = imt[11]
                         elif j == 0:
-                            if (i > 0 and a[i-1].get(chartlookup[k])[47]) == 23: imgdefined = 'note23b.png'
-                            else: imgdefined = 'note23a.png'
-                        elif(j != 0 and a[i].get(chartlookup[k])[j-1] != 23 and a[i].get(chartlookup[k])[j+1] == 23): imgdefined = 'note23a.png'
-                        else: imgdefined = 'note23b.png'
-                    case 24: imgdefined = 'note24.png'
-                    case 25: imgdefined = 'note25.png'
-                    case 26: imgdefined = 'note26.png'
-                    case 27: imgdefined = 'note27.png'
+                            if (i > 0 and a[i-1].get(chartlookup[k])[47]) == 23: imgdefined = imt[10]
+                            else: imgdefined = imt[9]
+                        elif(j != 0 and a[i].get(chartlookup[k])[j-1] != 23 and a[i].get(chartlookup[k])[j+1] == 23): imgdefined = imt[9]
+                        else: imgdefined = imt[10]
+                    case 24: imgdefined = imt[12]
+                    case 25: imgdefined = imt[13]
+                    case 26: imgdefined = imt[14]
+                    case 27: imgdefined = imt[15]
                     case 0: imgdefined = None
                     case _:
                         print("Invalid note type!")
                         exit()
                 if (imgdefined != None):
-                    pic = image.load(imgdefined)
+                    pic = imgdefined
                     posx = 2+(12*j)
                     posy = height-60-((k+1)*51)
                     spri = pyglet.sprite.Sprite(pic, posx, posy, batch = batch)
@@ -201,7 +201,7 @@ def masstrender():
     textrender(uballt, 330, 60)
     textrender(dbalqt, 330, 50)
     textrender(dballt, 330, 40)
-    textrender("v", 40+(12*temp2), 420)
+    textrender("v", 40+(12*temp2), 422)
     textrender("Press H for help", 10, 10)
     
     if temp3 == True: helprender()
@@ -209,25 +209,35 @@ def masstrender():
 def helprender():
     rect = pyglet.shapes.Rectangle(0, 0, width, height, color=(0, 0, 0, 204))
     rect.draw()
-    textrender("Taiko 3 Chart Viewer", 80, 280)
-    textrender("program by tikal.", 80, 270)
+    textrender("Taiko 3 Chart Viewer v1.0", 80, 280)
+    textrender("program by TheDoverBoys", 80, 270)
     textrender("2023", 80, 260)
     textrender("UP - Previous measure", 80, 240)
     textrender("DOWN - Next measure", 80, 230)
     textrender("ESC - Exit program", 80, 220)
     textrender("LEFT - Previous beat unit", 320, 240)
     textrender("RIGHT - Next beat unit", 320, 230)
-    
+
 def bgrender():
+    bars = []
     global chart
     global temp1
+    for i in range(2):
+        n1bar = pyglet.shapes.Rectangle(0,383-(i*153),width,37, color=(56, 56, 56), batch = batchtwo)
+        n2bar = pyglet.shapes.Rectangle(0,332-(i*153),width,37, color=(48,88,112), batch = batchtwo)
+        n3bar = pyglet.shapes.Rectangle(0,281-(i*153),width,37, color=(128,48,112), batch = batchtwo)
+        bars.append(n1bar)
+        bars.append(n2bar)
+        bars.append(n3bar)
+    for j in range(6):
+        wtbar = pyglet.shapes.Rectangle(0,370-(j*51),width,12, color=(248, 248, 248), batch=batchtwo)
+        bars.append(wtbar)
     linet = chart[temp1].get('BAR')
     if linet == True:
-        bar = pyglet.shapes.Rectangle(44, 120, 1, 296, color=(176, 176, 176, 255))
-        bar.draw()
+        bar = pyglet.shapes.Rectangle(44, 124, 1, 296, color=(176, 176, 176), batch = batchtwo)
+    batchtwo.draw()
 
-@window.event
-def on_activate():
+def init():
     try:
         global chart
         chart = everything(sys.argv[1])
@@ -282,6 +292,12 @@ def on_draw():
 def refresh():
     global sprites
     sprites = []
-    viewer(chart, temp1)
+    init()
 
-run()
+@window.event
+def on_deactivate():
+    window.clear()
+    
+if __name__ == "__main__":
+    init()
+    run()
