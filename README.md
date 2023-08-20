@@ -16,4 +16,15 @@ taiko 4, taiko 5, taiko 6 and taiko RT chart files are also compatible, as the f
 ## controls
 - UP / DOWN - change measure
 - LEFT / RIGHT - change beat position
+- A / D - change quantization
+- P - take screenshot
 - ESC - quit
+
+## changelog
+### v1.1 - aug 20 2023
+- added quantization bars
+- added print screen function
+- changed variable names
+
+### v1.0 - aug 19 2023
+- initial release

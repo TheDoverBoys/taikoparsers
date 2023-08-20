@@ -10,9 +10,11 @@ batch = pyglet.graphics.Batch()
 batchtwo = pyglet.graphics.Batch()
 sprites = []
 
-temp1 = 0
-temp2 = 0
-temp3 = False
+measure_no = 0
+beat_no = 0
+toggle_help = False
+screenshot_no = 0
+bar_no = 0
 
 def everything(file):
     if os.path.isfile(file):
@@ -47,26 +49,26 @@ def everything(file):
 
                 offset = int.from_bytes(bindata[12+increment:14+increment], "little")
 
-                barvis = bindata[14+increment] == 1
+                has_bar = bindata[14+increment] == 1
 
                 tempo = bindata[15+increment]
 
-                bal1quan = bindata[32+increment:34+increment]
-                bal1leng = bindata[34+increment:36+increment]
-                bal2quan = bindata[36+increment:38+increment]
-                bal2leng = bindata[38+increment:40+increment]
-                if (bal1quan == b'\xFF\xFF'):
-                    bal1quan = None
-                    bal1leng = None
+                balloon1_quantity = bindata[32+increment:34+increment]
+                balloon1_length = bindata[34+increment:36+increment]
+                balloon2_quantity = bindata[36+increment:38+increment]
+                balloon2_length = bindata[38+increment:40+increment]
+                if (balloon1_quantity == b'\xFF\xFF'):
+                    balloon1_quantity = None
+                    balloon1_length = None
                 else:
-                    bal1quan = int.from_bytes(bal1quan, "little")
-                    bal1leng = int.from_bytes(bal1leng, "little")
-                if (bal2quan == b'\xFF\xFF'):
-                    bal2quan = None
-                    bal2leng = None
+                    balloon1_quantity = int.from_bytes(balloon1_quantity, "little")
+                    balloon1_length = int.from_bytes(balloon1_length, "little")
+                if (balloon2_quantity == b'\xFF\xFF'):
+                    balloon2_quantity = None
+                    balloon2_length = None
                 else:
-                    bal2quan = int.from_bytes(bal2quan, "little")
-                    bal2leng = int.from_bytes(bal2leng, "little")
+                    balloon2_quantity = int.from_bytes(balloon2_quantity, "little")
+                    balloon2_length = int.from_bytes(balloon2_length, "little")
                 
                 norbranch1 = branchparser(bindata[40+increment:88+increment])
                 expbranch1 = branchparser(bindata[88+increment:136+increment])
@@ -74,7 +76,7 @@ def everything(file):
                 norbranch2 = branchparser(bindata[184+increment:232+increment])
                 expbranch2 = branchparser(bindata[232+increment:280+increment])
                 masbranch2 = branchparser(bindata[280+increment:328+increment])
-                jsony = json.dumps({'ABQ':branch1, 'MBQ':branch2, 'FOF':offset, 'BAR':barvis, 'TMP':tempo, 'BQO':bal1quan, 'BLO':bal1leng, 'BQT':bal2quan, 'BLT':bal2leng, 'ONB':norbranch1, 'OAB':expbranch1, 'OMB':masbranch1, 'TNB':norbranch2, 'TAB':expbranch2, 'TMB':masbranch2})
+                jsony = json.dumps({'ABQ':branch1, 'MBQ':branch2, 'FOF':offset, 'BAR':has_bar, 'TMP':tempo, 'BQO':balloon1_quantity, 'BLO':balloon1_length, 'BQT':balloon2_quantity, 'BLT':balloon2_length, 'ONB':norbranch1, 'OAB':expbranch1, 'OMB':masbranch1, 'TNB':norbranch2, 'TAB':expbranch2, 'TMB':masbranch2})
 
                 jsonx.append(json.loads(jsony))
                 measure+=1
@@ -150,37 +152,40 @@ def textrender(a, xpos, ypos):
                             x = xpos, y = ypos)
     label.draw()
 
-def masstrender():
+def masstextrender():
     global chart
-    global temp1
-    global temp2
-    global temp3
-    advbr = chart[temp1].get('ABQ')
-    masbr = chart[temp1].get('MBQ')
+    global measure_no
+    global beat_no
+    global toggle_help
+    global bar_no
+    bar_values = [1, 2, 4, 8, 12, 16, 24, 48]
+    advbr = chart[measure_no].get('ABQ')
+    masbr = chart[measure_no].get('MBQ')
     advbrt = "Advanced Quota: " + str(advbr)
     masbrt = "Master Quota:   " + str(masbr)
     
-    tempo = 14400/(chart[temp1].get('TMP'))
+    tempo = 14400/(chart[measure_no].get('TMP'))
     bint = 60/tempo
     mint = bint*4
-    pint = mint+(bint*(temp2/12))
-    divis = "Beat: " + str(temp2) + "/48"
+    pint = mint+(bint*(beat_no/12))
+    divis = "Beat: " + str(beat_no) + "/48"
     tempot = "BPM:           " + str(tempo)
-    offset = (chart[temp1].get('FOF'))/98.438121
-    if temp1 < len(chart)-1:
-        nxtint = (((chart[temp1+1].get('FOF'))/98.438121)+(60/(14400/(chart[temp1+1].get('TMP')))*4))-(offset+pint)
+    quantt = "Quantization: 1/" + str(bar_values[bar_no])
+    offset = (chart[measure_no].get('FOF'))/98.438121
+    if measure_no < len(chart)-1:
+        nxtint = (((chart[measure_no+1].get('FOF'))/98.438121)+(60/(14400/(chart[measure_no+1].get('TMP')))*4))-(offset+pint)
     else:
         nxtint = (bint*8)-pint
     offsett = "First Offset:  " + str(offset)
     roffset = "Reach Offset:  " + str(offset+mint)
     poffset = "Posit Offset:  " + str(offset+pint)
-    meast = "Measure: " + str(temp1+1) + " / " + str(len(chart))
+    meast = "Measure: " + str(measure_no+1) + " / " + str(len(chart))
     nxtintt = "Next Interval: " + str(nxtint)
     
-    ubalq = chart[temp1].get('BQO')
-    uball = chart[temp1].get('BLO')
-    dbalq = chart[temp1].get('BQT')
-    dball = chart[temp1].get('BLT')
+    ubalq = chart[measure_no].get('BQO')
+    uball = chart[measure_no].get('BLO')
+    dbalq = chart[measure_no].get('BQT')
+    dball = chart[measure_no].get('BLT')
     ubalqt = "1P Bal. Quant.: " + str(ubalq)
     uballt = "1P Bal. Length: " + str(uball)
     if uball != None: uballt += " / " + str(uball/60)
@@ -190,6 +195,7 @@ def masstrender():
     
     textrender(meast, 10, 460)
     textrender(divis, 330, 460)
+    textrender(quantt, 330, 450)
     textrender(advbrt, 10, 450)
     textrender(masbrt, 10, 440)
     textrender(tempot, 10, 80)
@@ -201,27 +207,32 @@ def masstrender():
     textrender(uballt, 330, 60)
     textrender(dbalqt, 330, 50)
     textrender(dballt, 330, 40)
-    textrender("v", 40+(12*temp2), 422)
+    textrender("v", 40+(12*beat_no), 422)
     textrender("Press H for help", 10, 10)
     
-    if temp3 == True: helprender()
+    if toggle_help == True: helprender()
 
 def helprender():
     rect = pyglet.shapes.Rectangle(0, 0, width, height, color=(0, 0, 0, 204))
     rect.draw()
-    textrender("Taiko 3 Chart Viewer v1.0", 80, 280)
-    textrender("program by TheDoverBoys", 80, 270)
-    textrender("2023", 80, 260)
-    textrender("UP - Previous measure", 80, 240)
-    textrender("DOWN - Next measure", 80, 230)
-    textrender("ESC - Exit program", 80, 220)
-    textrender("LEFT - Previous beat unit", 320, 240)
-    textrender("RIGHT - Next beat unit", 320, 230)
+    textrender("Taiko 3 Chart Viewer v1.1", 80, 285)
+    textrender("program by TheDoverBoys", 80, 275)
+    textrender("2023", 80, 265)
+    textrender("UP - Previous measure", 80, 245)
+    textrender("DOWN - Next measure", 80, 235)
+    textrender("LEFT - Previous beat unit", 80, 225)
+    textrender("RIGHT - Next beat unit", 80, 215)
+    textrender("A - Increase quantization", 320, 245)
+    textrender("D - Decrease quantization", 320, 235)
+    textrender("P - Take screenshot", 320, 225)
+    textrender("ESC - Exit program", 320, 215)
 
 def bgrender():
     bars = []
     global chart
-    global temp1
+    global measure_no
+    global bar_no
+    bar_values = [1, 2, 4, 8, 12, 16, 24, 48]
     for i in range(2):
         n1bar = pyglet.shapes.Rectangle(0,383-(i*153),width,37, color=(56, 56, 56), batch = batchtwo)
         n2bar = pyglet.shapes.Rectangle(0,332-(i*153),width,37, color=(48,88,112), batch = batchtwo)
@@ -232,9 +243,13 @@ def bgrender():
     for j in range(6):
         wtbar = pyglet.shapes.Rectangle(0,370-(j*51),width,12, color=(248, 248, 248), batch=batchtwo)
         bars.append(wtbar)
-    linet = chart[temp1].get('BAR')
+    for number in range(bar_values[bar_no]+1):
+        if number != 0:
+            beat_divide = pyglet.shapes.Rectangle(44+(576/bar_values[bar_no])+((number-1)*(576/bar_values[bar_no])), 128, 1, 292, color=(0, 0, 0, 102), batch = batchtwo)
+            bars.append(beat_divide)
+    linet = chart[measure_no].get('BAR')
     if linet == True:
-        bar = pyglet.shapes.Rectangle(44, 124, 1, 296, color=(176, 176, 176), batch = batchtwo)
+        bar = pyglet.shapes.Rectangle(44, 128, 1, 292, color=(176, 176, 176), batch = batchtwo)
     batchtwo.draw()
 
 def init():
@@ -245,39 +260,50 @@ def init():
         print("There's no file here!")
         print("Usage: ", os.path.basename(__file__), "[file]")
         exit()
-    viewer(chart, temp1)
+    viewer(chart, measure_no)
 
 @window.event
 def on_key_press(symbol, modifiers):
-    global temp1
-    global temp2
-    global temp3
+    global measure_no
+    global beat_no
+    global toggle_help
+    global bar_no
     
-    if temp3 == False:
+    if toggle_help == False:
         if symbol == key.RIGHT:
-            if temp2 >= 47 and temp1 < len(chart)-1:
-                temp1 += 1
-                temp2 = 0
+            if beat_no >= 47 and measure_no < len(chart)-1:
+                measure_no += 1
+                beat_no = 0
                 refresh()
-            elif temp2 < 47:
-                temp2 += 1
+            elif beat_no < 47:
+                beat_no += 1
         if symbol == key.LEFT:
-            if temp2 <= 0 and temp1 > 0:
-                temp1 -= 1
-                temp2 = 47
+            if beat_no <= 0 and measure_no > 0:
+                measure_no -= 1
+                beat_no = 47
                 refresh()
-            elif temp2 > 0:
-                temp2 -= 1
-        if symbol == key.UP and temp1 > 0:
-            temp1 -= 1
+            elif beat_no > 0:
+                beat_no -= 1
+        if symbol == key.UP and measure_no > 0:
+            measure_no -= 1
             refresh()
-        if symbol == key.DOWN and temp1 < len(chart)-1:
-            temp1 += 1
+        if symbol == key.DOWN and measure_no < len(chart)-1:
+            measure_no += 1
             refresh()
         if symbol == key.H:
-            temp3 = True
+            toggle_help = True
+        if symbol == key.P:
+            screenshot_name = 'screenshot_' + str(os.path.basename(sys.argv[1])) + '_m' + str(measure_no+1) + '.png'
+            pyglet.image.get_buffer_manager().get_color_buffer().save(screenshot_name)
+        if symbol == key.D:
+            if bar_no < 7: bar_no += 1
+            #print(bar_no)
+        if symbol == key.A:
+            if bar_no > 0: bar_no -= 1
+            #print(bar_no)
+            
     else:
-        if symbol == key.H: temp3 = False
+        if symbol == key.H: toggle_help = False
     
     if symbol == key.ESCAPE:
         window.close()
@@ -287,7 +313,7 @@ def on_draw():
     window.clear()
     bgrender()
     batch.draw()
-    masstrender()
+    masstextrender()
 
 def refresh():
     global sprites
