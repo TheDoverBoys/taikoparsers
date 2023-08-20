@@ -21,10 +21,14 @@ taiko 4, taiko 5, taiko 6 and taiko RT chart files are also compatible, as the f
 - ESC - quit
 
 ## changelog
+### v1.101 - aug 20 2023
+- tweaked screenshot function
+
 ### v1.1 - aug 20 2023
 - added quantization bars
-- added print screen function
+- added screenshot function
 - changed variable names
+- fixed drag+drop support
 
 ### v1.0 - aug 19 2023
 - initial release

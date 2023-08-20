@@ -215,7 +215,7 @@ def masstextrender():
 def helprender():
     rect = pyglet.shapes.Rectangle(0, 0, width, height, color=(0, 0, 0, 204))
     rect.draw()
-    textrender("Taiko 3 Chart Viewer v1.1", 80, 285)
+    textrender("Taiko 3 Chart Viewer v1.101", 80, 285)
     textrender("program by TheDoverBoys", 80, 275)
     textrender("2023", 80, 265)
     textrender("UP - Previous measure", 80, 245)
@@ -293,7 +293,10 @@ def on_key_press(symbol, modifiers):
         if symbol == key.H:
             toggle_help = True
         if symbol == key.P:
-            screenshot_name = 'screenshot_' + str(os.path.basename(sys.argv[1])) + '_m' + str(measure_no+1) + '.png'
+            screenshot_measure_no = str(measure_no+1)
+            if int(screenshot_measure_no) < 10: screenshot_measure_no = "00" + screenshot_measure_no
+            elif 10 <= int(screenshot_measure_no) < 100: screenshot_measure_no = "0" + screenshot_measure_no
+            screenshot_name = 'screenshot_' + str(os.path.basename(sys.argv[1])) + '_m' + str(screenshot_measure_no) + '.png'
             pyglet.image.get_buffer_manager().get_color_buffer().save(screenshot_name)
         if symbol == key.D:
             if bar_no < 7: bar_no += 1
