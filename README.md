@@ -6,6 +6,13 @@ install it like this
 ```
 pip install pyglet
 ```
+to run the thing
+```
+python taiko3parser.py [input file]
+```
+the input files are charts extracted from taiko 3's data  
+taiko 4, taiko 5, taiko 6 and taiko RT chart files are also compatible, as the format itself is the same
+
 ## controls
 - UP / DOWN - change measure
 - LEFT / RIGHT - change beat position
