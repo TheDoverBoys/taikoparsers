@@ -10,7 +10,7 @@ to run the thing
 ```
 python [script] [input file]
 ```
-taiko2parser.py runs files from taiko 2
+taiko2parser.py runs files from taiko 2  
 taiko3parser.py runs files from taiko 3, 4, 5, 6 and RT
 
 ## controls
