@@ -1,4 +1,4 @@
-# taiko3parser - a parser and viewer for taiko 3's chart format
+# taikoparsers - parser and viewers for the system 10 taiko games' formats
 ***NOTE: THIS IS LITERALLY MY FIRST PYTHON PROGRAM THIS IS UNOPTIMIZED TO HELL***
 ## setting it up
 you only need python 3.10+ and the pyglet module  
@@ -8,10 +8,10 @@ pip install pyglet
 ```
 to run the thing
 ```
-python taiko3parser.py [input file]
+python [script] [input file]
 ```
-the input files are charts extracted from taiko 3's data  
-taiko 4, taiko 5, taiko 6 and taiko RT chart files are also compatible, as the format itself is the same
+taiko2parser.py runs files from taiko 2
+taiko3parser.py runs files from taiko 3, 4, 5, 6 and RT
 
 ## controls
 - UP / DOWN - change measure
@@ -20,7 +20,7 @@ taiko 4, taiko 5, taiko 6 and taiko RT chart files are also compatible, as the f
 - P - take screenshot
 - ESC - quit
 
-## changelog
+## changelog (taiko3parser)
 ### v1.101 - aug 20 2023
 - tweaked screenshot function
 
@@ -31,4 +31,8 @@ taiko 4, taiko 5, taiko 6 and taiko RT chart files are also compatible, as the f
 - fixed drag+drop support
 
 ### v1.0 - aug 19 2023
+- initial release
+
+## changelog (taiko2parser)
+### v1.0 - sep 2 2023
 - initial release
