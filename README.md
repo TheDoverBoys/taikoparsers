@@ -21,6 +21,9 @@ taiko3parser.py runs files from taiko 3, 4, 5, 6 and RT
 - ESC - quit
 
 ## changelog (taiko3parser)
+### v1.111 - feb 29 2024
+- added small log upon entering a file
+
 ### v1.101 - aug 20 2023
 - tweaked screenshot function
 
