@@ -15,6 +15,7 @@ beat_no = 0
 toggle_help = False
 screenshot_no = 0
 bar_no = 0
+toggle_stats = True
 
 def everything(file):
     if os.path.isfile(file):
@@ -86,6 +87,7 @@ def everything(file):
 
 def branchparser(area):
     split = [area[i] for i in range (0, len(area))]
+    #print(split)
     return split
 
 def viewer(a, mn):
@@ -158,6 +160,7 @@ def masstextrender():
     global beat_no
     global toggle_help
     global bar_no
+    global toggle_stats
     bar_values = [1, 2, 4, 8, 12, 16, 24, 48]
     advbr = chart[measure_no].get('ABQ')
     masbr = chart[measure_no].get('MBQ')
@@ -211,13 +214,14 @@ def masstextrender():
     textrender("Press H for help", 10, 10)
     
     if toggle_help == True: helprender()
-
+    if toggle_stats == True: statsrender(chart)
+    
 def helprender():
     rect = pyglet.shapes.Rectangle(0, 0, width, height, color=(0, 0, 0, 204))
     rect.draw()
-    textrender("Taiko 3 Chart Viewer v1.101", 80, 285)
+    textrender("Taiko 3 Chart Viewer v1.111", 80, 285)
     textrender("program by TheDoverBoys", 80, 275)
-    textrender("2023", 80, 265)
+    textrender("2023-2024", 80, 265)
     textrender("UP - Previous measure", 80, 245)
     textrender("DOWN - Next measure", 80, 235)
     textrender("LEFT - Previous beat unit", 80, 225)
@@ -226,6 +230,44 @@ def helprender():
     textrender("D - Decrease quantization", 320, 235)
     textrender("P - Take screenshot", 320, 225)
     textrender("ESC - Exit program", 320, 215)
+
+def statsrender(chart):
+    global toggle_stats
+    twoplayer_verify = False
+    branch_verify = False
+    unusedbranch_verify = False
+    firstbranch = None
+    
+    for chart_index in range(len(chart)):
+        advancedbranch = chart[chart_index].get('ABQ')
+        masterbranch = chart[chart_index].get('MBQ')
+        if not advancedbranch: advancedbranch = 0
+        if not masterbranch: masterbranch = 0
+        if (advancedbranch > 0 or masterbranch > 0) and not branch_verify:
+            firstbranch = chart_index
+            branch_verify = True
+    for chart_index in range(len(chart)):
+        playeronesideone = chart[chart_index].get('ONB')
+        playertwosideone = chart[chart_index].get('TNB')
+        playeronesidetwo = chart[chart_index].get('OAB')
+        playeronesidethr = chart[chart_index].get('OMB')
+        playertwosidetwo = chart[chart_index].get('TAB')
+        playertwosidethr = chart[chart_index].get('TMB')
+        if (playeronesideone != playertwosideone) and not twoplayer_verify:
+            twoplayer_verify = True
+        if branch_verify:
+            if chart_index < firstbranch:
+                for tick_index in range(len(playeronesideone)):
+                    if (playeronesidetwo[tick_index] or playeronesidethr[tick_index] or playertwosidetwo[tick_index] or playertwosidethr[tick_index]) and not unusedbranch_verify:
+                        unusedbranch_verify = True
+            if ((playeronesidetwo != playertwosidetwo) or (playeronesidethr != playertwosidethr)) and not twoplayer_verify:
+                twoplayer_verify = True
+        else:
+            for tick_index in range(len(playeronesideone)):
+                if (playeronesidetwo[tick_index] or playeronesidethr[tick_index] or playertwosidetwo[tick_index] or playertwosidethr[tick_index]) and not unusedbranch_verify:
+                        unusedbranch_verify = True
+    print("Branches: ", branch_verify, " /  Unused Branch Sections: ", unusedbranch_verify, " /  Two Player: ", twoplayer_verify)
+    toggle_stats = False
 
 def bgrender():
     bars = []
@@ -240,9 +282,6 @@ def bgrender():
         bars.append(n1bar)
         bars.append(n2bar)
         bars.append(n3bar)
-    for j in range(6):
-        wtbar = pyglet.shapes.Rectangle(0,370-(j*51),width,12, color=(248, 248, 248), batch=batchtwo)
-        bars.append(wtbar)
     for number in range(bar_values[bar_no]+1):
         if number != 0:
             beat_divide = pyglet.shapes.Rectangle(44+(576/bar_values[bar_no])+((number-1)*(576/bar_values[bar_no])), 128, 1, 292, color=(0, 0, 0, 102), batch = batchtwo)
@@ -250,6 +289,9 @@ def bgrender():
     linet = chart[measure_no].get('BAR')
     if linet == True:
         bar = pyglet.shapes.Rectangle(44, 128, 1, 292, color=(176, 176, 176), batch = batchtwo)
+    for j in range(6):
+        wtbar = pyglet.shapes.Rectangle(0,370-(j*51),width,12, color=(248, 248, 248), batch=batchtwo)
+        bars.append(wtbar)
     batchtwo.draw()
 
 def init():
@@ -267,6 +309,7 @@ def on_key_press(symbol, modifiers):
     global measure_no
     global beat_no
     global toggle_help
+    global toggle_stats
     global bar_no
     
     if toggle_help == False:
@@ -296,7 +339,7 @@ def on_key_press(symbol, modifiers):
             screenshot_measure_no = str(measure_no+1)
             if int(screenshot_measure_no) < 10: screenshot_measure_no = "00" + screenshot_measure_no
             elif 10 <= int(screenshot_measure_no) < 100: screenshot_measure_no = "0" + screenshot_measure_no
-            screenshot_name = 'screenshot_' + str(os.path.basename(sys.argv[1])) + '_m' + str(screenshot_measure_no) + '.png'
+            screenshot_name = 'm' + str(screenshot_measure_no) + '.png' # 'screenshot_' + str(os.path.basename(sys.argv[1])) + '_m' + str(screenshot_measure_no) + '.png'
             pyglet.image.get_buffer_manager().get_color_buffer().save(screenshot_name)
         if symbol == key.D:
             if bar_no < 7: bar_no += 1
@@ -304,7 +347,6 @@ def on_key_press(symbol, modifiers):
         if symbol == key.A:
             if bar_no > 0: bar_no -= 1
             #print(bar_no)
-            
     else:
         if symbol == key.H: toggle_help = False
     
