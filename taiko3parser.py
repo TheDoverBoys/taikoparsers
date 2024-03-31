@@ -219,7 +219,7 @@ def masstextrender():
 def helprender():
     rect = pyglet.shapes.Rectangle(0, 0, width, height, color=(0, 0, 0, 204))
     rect.draw()
-    textrender("Taiko 3 Chart Viewer v1.111", 80, 285)
+    textrender("Taiko 3 Chart Viewer v1.112", 80, 285)
     textrender("program by TheDoverBoys", 80, 275)
     textrender("2023-2024", 80, 265)
     textrender("UP - Previous measure", 80, 245)
