@@ -21,6 +21,9 @@ taiko3parser.py runs files from taiko 3, 4, 5, 6 and RT
 - ESC - quit
 
 ## changelog (taiko3parser)
+### v1.112 - mar 31 2024
+- changed sprite sheet resolution
+
 ### v1.111 - feb 29 2024
 - added small log upon entering a file
 
@@ -37,5 +40,9 @@ taiko3parser.py runs files from taiko 3, 4, 5, 6 and RT
 - initial release
 
 ## changelog (taiko2parser)
+### v1.001 - mar 31 2024
+- changed sprite sheet resolution
+- added small log upon entering a file
+
 ### v1.0 - sep 2 2023
 - initial release

@@ -15,6 +15,7 @@ beat_no = 0
 toggle_help = False
 screenshot_no = 0
 bar_no = 0
+toggle_stats = True
 
 def everything(file):
     if os.path.isfile(file):
@@ -98,7 +99,7 @@ def viewer(a, measurenumber):
                         exit()
                 if (imgdefined != None):
                     pic = imgdefined
-                    posx = 2+(12*j)
+                    posx = 23+(12*j)
                     posy = height-60-((k+1)*51)
                     spri = pyglet.sprite.Sprite(pic, posx, posy, batch = batch)
                     sprites.append(spri)
@@ -117,6 +118,7 @@ def masstextrender():
     global beat_no
     global toggle_help
     global bar_no
+    global toggle_stats
     bar_values = [1, 2, 4, 8, 12, 16, 24, 48]
     advbr = chart[measure_no].get('ABQ')
     masbr = chart[measure_no].get('MBQ')
@@ -144,6 +146,7 @@ def masstextrender():
     textrender("Press H for help", 10, 10)
     
     if toggle_help == True: helprender()
+    if toggle_stats == True: statsrender(chart)
 
 def helprender():
     rect = pyglet.shapes.Rectangle(0, 0, width, height, color=(0, 0, 0, 204))
@@ -159,6 +162,44 @@ def helprender():
     textrender("D - Decrease quantization", 320, 235)
     textrender("P - Take screenshot", 320, 225)
     textrender("ESC - Exit program", 320, 215)
+
+def statsrender(chart):
+    global toggle_stats
+    twoplayer_verify = False
+    branch_verify = False
+    unusedbranch_verify = False
+    firstbranch = None
+    
+    for chart_index in range(len(chart)):
+        advancedbranch = chart[chart_index].get('ABQ')
+        masterbranch = chart[chart_index].get('MBQ')
+        if not advancedbranch: advancedbranch = 0
+        if not masterbranch: masterbranch = 0
+        if (advancedbranch > 0 or masterbranch > 0) and not branch_verify:
+            firstbranch = chart_index
+            branch_verify = True
+    for chart_index in range(len(chart)):
+        playeronesideone = chart[chart_index].get('ONB')
+        playertwosideone = chart[chart_index].get('TNB')
+        playeronesidetwo = chart[chart_index].get('OAB')
+        playeronesidethr = chart[chart_index].get('OMB')
+        playertwosidetwo = chart[chart_index].get('TAB')
+        playertwosidethr = chart[chart_index].get('TMB')
+        if (playeronesideone != playertwosideone) and not twoplayer_verify:
+            twoplayer_verify = True
+        if branch_verify:
+            if chart_index < firstbranch:
+                for tick_index in range(len(playeronesideone)):
+                    if (playeronesidetwo[tick_index] or playeronesidethr[tick_index] or playertwosidetwo[tick_index] or playertwosidethr[tick_index]) and not unusedbranch_verify:
+                        unusedbranch_verify = True
+            if ((playeronesidetwo != playertwosidetwo) or (playeronesidethr != playertwosidethr)) and not twoplayer_verify:
+                twoplayer_verify = True
+        else:
+            for tick_index in range(len(playeronesideone)):
+                if (playeronesidetwo[tick_index] or playeronesidethr[tick_index] or playertwosidetwo[tick_index] or playertwosidethr[tick_index]) and not unusedbranch_verify:
+                        unusedbranch_verify = True
+    print("Branches: ", branch_verify, " /  Unused Branch Sections: ", unusedbranch_verify, " /  Two Player: ", twoplayer_verify)
+    toggle_stats = False
 
 def bgrender():
     bars = []

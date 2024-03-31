@@ -14,7 +14,7 @@ measure_no = 0
 beat_no = 0
 toggle_help = False
 screenshot_no = 0
-bar_no = 0
+bar_no = 2
 toggle_stats = True
 
 def everything(file):
@@ -141,7 +141,7 @@ def viewer(a, mn):
                         exit()
                 if (imgdefined != None):
                     pic = imgdefined
-                    posx = 2+(12*j)
+                    posx = 23+(12*j)
                     posy = height-60-((k+1)*51)
                     spri = pyglet.sprite.Sprite(pic, posx, posy, batch = batch)
                     sprites.append(spri)
