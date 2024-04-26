@@ -1,5 +1,5 @@
 # taikoparsers - parser and viewers for the system 10 taiko games' formats
-***NOTE: THIS IS LITERALLY MY FIRST PYTHON PROGRAM THIS IS UNOPTIMIZED TO HELL***
+
 ## setting it up
 you only need python 3.10+ and the pyglet module  
 install it like this  
@@ -11,7 +11,8 @@ to run the thing
 python [script] [input file]
 ```
 taiko2parser.py runs files from taiko 2  
-taiko3parser.py runs files from taiko 3, 4, 5, 6 and RT
+taiko3parser.py runs files from taiko 3, 4, 5, 6 and RT, as well as the first three PS2 games + anime matsuri  
+taikoCS4parser.py runs files from taiko yondaime (theoretically TDM too?)
 
 ## controls
 - UP / DOWN - change measure
@@ -21,6 +22,10 @@ taiko3parser.py runs files from taiko 3, 4, 5, 6 and RT
 - ESC - quit
 
 ## changelog (taiko3parser)
+### v1.113 - apr 26 2024
+- tweaked line code
+- added new check for unused branch areas
+
 ### v1.112 - mar 31 2024
 - changed sprite sheet resolution
 
@@ -40,9 +45,17 @@ taiko3parser.py runs files from taiko 3, 4, 5, 6 and RT
 - initial release
 
 ## changelog (taiko2parser)
+### v1.002 - apr 26 2024
+- tweaked line code
+- added new check for unused branch areas
+
 ### v1.001 - mar 31 2024
 - changed sprite sheet resolution
 - added small log upon entering a file
 
 ### v1.0 - sep 2 2023
+- initial release
+
+## changelog (taikoCS4parser)
+### v1.0 - apr 26 2024
 - initial release

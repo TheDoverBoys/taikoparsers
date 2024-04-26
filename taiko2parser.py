@@ -151,7 +151,7 @@ def masstextrender():
 def helprender():
     rect = pyglet.shapes.Rectangle(0, 0, width, height, color=(0, 0, 0, 204))
     rect.draw()
-    textrender("Taiko 2 Chart Viewer v1.001", 80, 285)
+    textrender("Taiko 2 Chart Viewer v1.002", 80, 285)
     textrender("program by TheDoverBoys", 80, 275)
     textrender("2023-2024", 80, 265)
     textrender("UP - Previous measure", 80, 245)
@@ -191,7 +191,8 @@ def statsrender(chart):
             if chart_index < firstbranch:
                 for tick_index in range(len(playeronesideone)):
                     if (playeronesidetwo[tick_index] or playeronesidethr[tick_index] or playertwosidetwo[tick_index] or playertwosidethr[tick_index]) and not unusedbranch_verify:
-                        unusedbranch_verify = True
+                        if playeronesidetwo[tick_index] != playeronesideone[tick_index] or playeronesidethr[tick_index] != playeronesideone[tick_index] or playertwosidetwo[tick_index] != playertwosideone[tick_index] or playertwosidethr[tick_index] != playertwosideone[tick_index] and not unusedbranch_verify:
+                            unusedbranch_verify = True
             if ((playeronesidetwo != playertwosidetwo) or (playeronesidethr != playertwosidethr)) and not twoplayer_verify:
                 twoplayer_verify = True
         else:
@@ -218,8 +219,9 @@ def bgrender():
         if number != 0:
             beat_divide = pyglet.shapes.Rectangle(44+(576/bar_values[bar_no])+((number-1)*(576/bar_values[bar_no])), 128, 1, 292, color=(0, 0, 0, 102), batch = batchtwo)
             bars.append(beat_divide)
-    bar = pyglet.shapes.Rectangle(44, 128, 1, 292, color=(176, 176, 176), batch = batchtwo)
     for j in range(6):
+        bar = pyglet.shapes.Rectangle(44, 128+(51*j), 1, 37, color=(176, 176, 176), batch = batchtwo)
+        bars.append(bar)
         wtbar = pyglet.shapes.Rectangle(0,370-(j*51),width,12, color=(248, 248, 248), batch=batchtwo)
         bars.append(wtbar)
     batchtwo.draw()
