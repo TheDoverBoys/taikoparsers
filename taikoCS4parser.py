@@ -234,7 +234,7 @@ def display_area_text(type, hitvalue, lengthvalue, x_position, y_position):
 def helprender():
     rect = pyglet.shapes.Rectangle(0, 0, width, height, color=(0, 0, 0, 204))
     rect.draw()
-    textrender("Taiko CS4 Chart Viewer v1.0", 80, 285)
+    textrender("Taiko CS4 Chart Viewer v1.001", 80, 285)
     textrender("program by TheDoverBoys", 80, 275)
     textrender("2024", 80, 265)
     textrender("UP - Previous measure", 80, 245)
@@ -272,10 +272,16 @@ def statsrender(chart):
             __twoplayer_verify = True
         if __branch_verify:
             if __chart_index < __firstbranch:
-                for __tick_index in range(len(__player1side1)):
-                    if (__player1side2[__tick_index] or __player1side3[__tick_index] or __player2side2[__tick_index] or __player2side3[__tick_index]) and not __unusedbranch_verify:
-                        if __player1side2[__tick_index] != __player1side1[__tick_index] or __player1side3[__tick_index] != __player1side1[__tick_index] or __player2side2[__tick_index] != __player2side1[__tick_index] or __player2side3[__tick_index] != __player2side1[__tick_index] and not __unusedbranch_verify:
-                            __unusedbranch_verify = True
+                if not __unusedbranch_verify:
+                    if ((len(__player1side1) != len(__player1side2) or len(__player1side1) != len(__player1side3)) or (len(__player2side1) != len(__player2side2) or len(__player2side1) != len(__player2side3))):
+                        __unusedbranch_verify = True
+                    else:
+                        for __tick_index in range(len(__player1side1)):
+                            if __player1side2[__tick_index] != __player1side1[__tick_index] or __player1side3[__tick_index] != __player1side1[__tick_index]:
+                                __unusedbranch_verify = True
+                        for __tick_index in range(len(__player2side1)):
+                            if __player2side2[__tick_index] != __player2side1[__tick_index] or __player2side3[__tick_index] != __player2side1[__tick_index]:
+                                __unusedbranch_verify = True
             if ((__player1side2 != __player2side2) or (__player1side3 != __player2side3)) and not __twoplayer_verify:
                 __twoplayer_verify = True
         else:

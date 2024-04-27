@@ -1,4 +1,4 @@
-# taikoparsers - parser and viewers for some taiko no tatsujin games' chart formats
+# taikoparsers - parser and viewers for the system 10 taiko games' formats
 
 ## setting it up
 you only need python 3.10+ and the pyglet module  
@@ -57,5 +57,8 @@ taikoCS4parser.py runs files from taiko yondaime (theoretically TDM too?)
 - initial release
 
 ## changelog (taikoCS4parser)
+### v1.001 - apr 27 2024
+- fixed bug in unused branch area check
+
 ### v1.0 - apr 26 2024
 - initial release
