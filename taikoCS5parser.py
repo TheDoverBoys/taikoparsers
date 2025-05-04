@@ -5,7 +5,7 @@ from pyglet.app import run
 from pyglet import image
 
 width, height= 640, 480
-window = Window(caption="Taiko CS4 Chart Viewer", width=width,height=height)
+window = Window(caption="Taiko CS5 Chart Viewer", width=width,height=height)
 batch = pyglet.graphics.Batch()
 batchtwo = pyglet.graphics.Batch()
 sprites = []
@@ -21,7 +21,7 @@ def everything(file):
     if os.path.isfile(file):
         arquivo = open(file,"rb")
         bindata = arquivo.read()
-        chunksize = 92
+        chunksize = 96
         measure = 1
         number_of_measures = int.from_bytes(bindata[:4], byteorder='little')
         definition_offset = int.from_bytes(bindata[4:8], byteorder='little')
@@ -44,33 +44,34 @@ def section_parse(data, chunksize, measures):
         __measure_offset = int.from_bytes(data[measure*chunksize:4+(measure*chunksize)], byteorder='little')
         __measure_bpm = int.from_bytes(data[4+(measure*chunksize):8+(measure*chunksize)], byteorder='little')
         __measure_barline = int.from_bytes(data[8+(measure*chunksize):12+(measure*chunksize)], byteorder='little')
+        __measure_gogotime = int.from_bytes(data[12+(measure*chunksize):16+(measure*chunksize)], byteorder='little')
         __measure_advquota = None
-        if data[12+(measure*chunksize):16+(measure*chunksize)] != b'\xFF\xFF\xFF\xFF':
-            __measure_advquota = int.from_bytes(data[12+(measure*chunksize):16+(measure*chunksize)], byteorder='little')
+        if data[16+(measure*chunksize):20+(measure*chunksize)] != b'\xFF\xFF\xFF\xFF':
+            __measure_advquota = int.from_bytes(data[16+(measure*chunksize):20+(measure*chunksize)], byteorder='little')
 
         __measure_masquota = None
-        if data[16+(measure*chunksize):20+(measure*chunksize)] != b'\xFF\xFF\xFF\xFF':
-            __measure_masquota = int.from_bytes(data[16+(measure*chunksize):20+(measure*chunksize)], byteorder='little')
+        if data[20+(measure*chunksize):24+(measure*chunksize)] != b'\xFF\xFF\xFF\xFF':
+            __measure_masquota = int.from_bytes(data[20+(measure*chunksize):24+(measure*chunksize)], byteorder='little')
         
-        __measure_definition_offset_one_nor = int.from_bytes(data[20+(measure*chunksize):24+(measure*chunksize)], byteorder='little')
-        __measure_definition_length_one_nor = int.from_bytes(data[24+(measure*chunksize):28+(measure*chunksize)], byteorder='little')
-        #__measure_definition_remain_one_nor = int.from_bytes(data[28+(measure*chunksize):32+(measure*chunksize)], byteorder='little')
-        __measure_definition_offset_one_adv = int.from_bytes(data[32+(measure*chunksize):36+(measure*chunksize)], byteorder='little')
-        __measure_definition_length_one_adv = int.from_bytes(data[36+(measure*chunksize):40+(measure*chunksize)], byteorder='little')
-        #__measure_definition_remain_one_adv = int.from_bytes(data[40+(measure*chunksize):44+(measure*chunksize)], byteorder='little')
-        __measure_definition_offset_one_mas = int.from_bytes(data[44+(measure*chunksize):48+(measure*chunksize)], byteorder='little')
-        __measure_definition_length_one_mas = int.from_bytes(data[48+(measure*chunksize):52+(measure*chunksize)], byteorder='little')
-        #__measure_definition_remain_one_mas = int.from_bytes(data[52+(measure*chunksize):56+(measure*chunksize)], byteorder='little')
-        __measure_definition_offset_two_nor = int.from_bytes(data[56+(measure*chunksize):60+(measure*chunksize)], byteorder='little')
-        __measure_definition_length_two_nor = int.from_bytes(data[60+(measure*chunksize):64+(measure*chunksize)], byteorder='little')
-        #__measure_definition_remain_two_nor = int.from_bytes(data[64+(measure*chunksize):68+(measure*chunksize)], byteorder='little')
-        __measure_definition_offset_two_adv = int.from_bytes(data[68+(measure*chunksize):72+(measure*chunksize)], byteorder='little')
-        __measure_definition_length_two_adv = int.from_bytes(data[72+(measure*chunksize):76+(measure*chunksize)], byteorder='little')
-        #__measure_definition_remain_two_adv = int.from_bytes(data[76+(measure*chunksize):80+(measure*chunksize)], byteorder='little')
-        __measure_definition_offset_two_mas = int.from_bytes(data[80+(measure*chunksize):84+(measure*chunksize)], byteorder='little')
-        __measure_definition_length_two_mas = int.from_bytes(data[84+(measure*chunksize):88+(measure*chunksize)], byteorder='little')
-        #__measure_definition_remain_two_mas = int.from_bytes(data[88+(measure*chunksize):92+(measure*chunksize)], byteorder='little')
-        __json_measure = json.dumps({'MOF':__measure_offset, 'BPM':__measure_bpm, 'BAR':__measure_barline, 'ABQ':__measure_advquota, 'MBQ':__measure_masquota, 'ONO':__measure_definition_offset_one_nor, 'ONL':__measure_definition_length_one_nor, 'OAO':__measure_definition_offset_one_adv, 'OAL':__measure_definition_length_one_adv, 'OMO':__measure_definition_offset_one_mas, 'OML':__measure_definition_length_one_mas, 'TNO':__measure_definition_offset_two_nor, 'TNL':__measure_definition_length_two_nor, 'TAO':__measure_definition_offset_two_adv, 'TAL':__measure_definition_length_two_adv, 'TMO':__measure_definition_offset_two_mas, 'TML':__measure_definition_length_two_mas})
+        __measure_definition_offset_one_nor = int.from_bytes(data[24+(measure*chunksize):28+(measure*chunksize)], byteorder='little')
+        __measure_definition_length_one_nor = int.from_bytes(data[28+(measure*chunksize):32+(measure*chunksize)], byteorder='little')
+        #__measure_definition_remain_one_nor = int.from_bytes(data[32+(measure*chunksize):36+(measure*chunksize)], byteorder='little')
+        __measure_definition_offset_one_adv = int.from_bytes(data[36+(measure*chunksize):40+(measure*chunksize)], byteorder='little')
+        __measure_definition_length_one_adv = int.from_bytes(data[40+(measure*chunksize):44+(measure*chunksize)], byteorder='little')
+        #__measure_definition_remain_one_adv = int.from_bytes(data[44+(measure*chunksize):48+(measure*chunksize)], byteorder='little')
+        __measure_definition_offset_one_mas = int.from_bytes(data[48+(measure*chunksize):52+(measure*chunksize)], byteorder='little')
+        __measure_definition_length_one_mas = int.from_bytes(data[52+(measure*chunksize):56+(measure*chunksize)], byteorder='little')
+        #__measure_definition_remain_one_mas = int.from_bytes(data[56+(measure*chunksize):60+(measure*chunksize)], byteorder='little')
+        __measure_definition_offset_two_nor = int.from_bytes(data[60+(measure*chunksize):64+(measure*chunksize)], byteorder='little')
+        __measure_definition_length_two_nor = int.from_bytes(data[64+(measure*chunksize):68+(measure*chunksize)], byteorder='little')
+        #__measure_definition_remain_two_nor = int.from_bytes(data[68+(measure*chunksize):72+(measure*chunksize)], byteorder='little')
+        __measure_definition_offset_two_adv = int.from_bytes(data[72+(measure*chunksize):76+(measure*chunksize)], byteorder='little')
+        __measure_definition_length_two_adv = int.from_bytes(data[76+(measure*chunksize):80+(measure*chunksize)], byteorder='little')
+        #__measure_definition_remain_two_adv = int.from_bytes(data[80+(measure*chunksize):84+(measure*chunksize)], byteorder='little')
+        __measure_definition_offset_two_mas = int.from_bytes(data[84+(measure*chunksize):88+(measure*chunksize)], byteorder='little')
+        __measure_definition_length_two_mas = int.from_bytes(data[88+(measure*chunksize):92+(measure*chunksize)], byteorder='little')
+        #__measure_definition_remain_two_mas = int.from_bytes(data[92+(measure*chunksize):96+(measure*chunksize)], byteorder='little')
+        __json_measure = json.dumps({'MOF':__measure_offset, 'BPM':__measure_bpm, 'BAR':__measure_barline, 'GOG':__measure_gogotime, 'ABQ':__measure_advquota, 'MBQ':__measure_masquota, 'ONO':__measure_definition_offset_one_nor, 'ONL':__measure_definition_length_one_nor, 'OAO':__measure_definition_offset_one_adv, 'OAL':__measure_definition_length_one_adv, 'OMO':__measure_definition_offset_one_mas, 'OML':__measure_definition_length_one_mas, 'TNO':__measure_definition_offset_two_nor, 'TNL':__measure_definition_length_two_nor, 'TAO':__measure_definition_offset_two_adv, 'TAL':__measure_definition_length_two_adv, 'TMO':__measure_definition_offset_two_mas, 'TML':__measure_definition_length_two_mas})
         __json_measures.append(json.loads(__json_measure))
 
     return __json_measures
@@ -151,6 +152,7 @@ def viewer(chart, measure_no):
                     case 9: image_defined = image_tiles[9]
                     case 10: image_defined = image_tiles[15]
                     case 11: image_defined = image_tiles[13]
+                    case 12: image_defined = image_tiles[14]
                     case _:
                         print("Invalid note type!")
                         exit()
@@ -180,7 +182,7 @@ def masstextrender():
                 text_define = chart[1][measure_number][area_index][note_index].get('TYP')
                 match text_define:
                     case (6 | 9): display_area_text(text_define, None, str(chart[1][measure_number][area_index][note_index].get('LEN')/1000), 23+(12*chart[1][measure_number][area_index][note_index].get('POS')), height-60-((area_index+1)*51))
-                    case 10: display_area_text(text_define, str(chart[1][measure_number][area_index][note_index].get('HIT')), str(chart[1][measure_number][area_index][note_index].get('LEN')/1000), 23+(12*chart[1][measure_number][area_index][note_index].get('POS')), height-60-((area_index+1)*51))
+                    case (10 | 12): display_area_text(text_define, str(chart[1][measure_number][area_index][note_index].get('HIT')), str(chart[1][measure_number][area_index][note_index].get('LEN')/1000), 23+(12*chart[1][measure_number][area_index][note_index].get('POS')), height-60-((area_index+1)*51))
     
     bar_values = [1, 2, 4, 8, 12, 16, 24, 48]
     
@@ -193,7 +195,7 @@ def masstextrender():
     beat_interval = 60/tempo
     measure_interval = beat_interval*4
     position_interval = measure_interval+(beat_interval*(beat_number/12))
-    
+    gogo_text = "Go Go Time ACTIVE"
     beat_division_text = "Beat: " + str(beat_number) + "/48"
     tempo_text = "BPM:           " + str(tempo)
     quantization_text = "Quantization: 1/" + str(bar_values[bar_number])
@@ -212,6 +214,8 @@ def masstextrender():
     textrender(measure_text, 10, 460)
     textrender(beat_division_text, 330, 460)
     textrender(quantization_text, 330, 450)
+    if chart[0][measure_number].get('GOG'):
+        textrender(gogo_text, 10, 90)
     textrender(advanced_text, 10, 450)
     textrender(master_text, 10, 440)
     textrender(tempo_text, 10, 80)
@@ -228,15 +232,15 @@ def masstextrender():
 
 def display_area_text(type, hitvalue, lengthvalue, x_position, y_position):
     textrender(lengthvalue, x_position+36, y_position+16)
-    if type == 10:
+    if type == 10 or type == 12:
         textrender(hitvalue, x_position+36, y_position+41)
 
 def helprender():
     rect = pyglet.shapes.Rectangle(0, 0, width, height, color=(0, 0, 0, 204))
     rect.draw()
-    textrender("Taiko CS4 Chart Viewer v1.001", 80, 285)
+    textrender("Taiko CS5 Chart Viewer v1.0", 80, 285)
     textrender("program by TheDoverBoys", 80, 275)
-    textrender("2024", 80, 265)
+    textrender("2025", 80, 265)
     textrender("UP - Previous measure", 80, 245)
     textrender("DOWN - Next measure", 80, 235)
     textrender("LEFT - Previous beat unit", 80, 225)
