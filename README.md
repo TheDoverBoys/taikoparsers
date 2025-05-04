@@ -1,4 +1,4 @@
-# taikoparsers - parser and viewers for the system 10 taiko games' formats
+# taikoparsers - parser and viewers for the taiko games' formats
 
 ## setting it up
 you only need python 3.10+ and the pyglet module  
