@@ -13,7 +13,8 @@ python [script] [input file]
 taiko2parser.py runs files from taiko 2  
 taiko3parser.py runs files from taiko 3, 4, 5, 6 and RT, as well as the first three PS2 games + anime matsuri  
 taikoCS4parser.py runs files from taiko yondaime and TDM  
-taikoCS5parser.py runs files from taiko godaime
+taikoCS5parser.py runs files from taiko godaime  
+taikoPSP1parser.py runs files from taiko portable and anime special
 
 ## controls
 - UP / DOWN - change measure
@@ -69,4 +70,8 @@ taikoCS5parser.py runs files from taiko godaime
 
 ## changelog (taikoCS5parser)
 ### v1.0 - may 3 2025
+- initial release
+
+## changelog (taikoPSP1parser)
+### v1.0 - may 8 2025
 - initial release
